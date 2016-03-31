@@ -20,6 +20,8 @@ public class MainTable {
 		library = lib;
 		table = new TableView<>();
 		table = initTable(table);
+		table.setItems(library.getGroupOfBooks(0, 5));
+		table.setTableMenuButtonVisible(true);
 		table.setEditable(true);
 	}
 
@@ -46,7 +48,6 @@ public class MainTable {
 		finalTomesNumCol.setCellValueFactory(new PropertyValueFactory<Book, String>("finalTomeNumber"));
 		
 		table.getColumns().addAll(bookNameCol, authorCol, circulationCol, tomesNumCol, finalTomesNumCol);
-		table.setItems(library.getBooks());
 		return table;
 	}
 }

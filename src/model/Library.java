@@ -7,18 +7,31 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class Library {
-	private ObservableList<Book> books;
+	private List<Book> books;
+	private ObservableList<Book> currentGroup;
 	/**
 	 * @return the books
 	 */
 	public ObservableList<Book> getBooks() {
-		return books;
+		return currentGroup;
 	}
 	public Library() {
-		List<Book> list = new LinkedList<Book>();
-		books = FXCollections.observableList(list);
+		books = new LinkedList<Book>();
+		List list = new LinkedList<Book>();
+		currentGroup = FXCollections.observableList(list);
 	}
-	public void addBook(Book book){
+	public ObservableList<Book> getGroupOfBooks(int numOfGroup, int sizeOfGroup){
+		return  currentGroup;
+	}
+	public void addBook(Book book) {
 		books.add(book);
+		if(currentGroup.size()<10){
+			currentGroup.add(book);
+		}
+	}
+
+
+	Class<?> getItemClass(){
+		return Book.class;
 	}
 }

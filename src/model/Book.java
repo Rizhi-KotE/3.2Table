@@ -16,7 +16,7 @@ public class Book implements NamedFields{
 		try {
 			map.put(Book.class.getDeclaredField("authorName"), "Author");
 			map.put(Book.class.getDeclaredField("bookName"), "Book's name");
-			map.put(Book.class.getDeclaredField("circulate"), "circulate");
+			map.put(Book.class.getDeclaredField("circulation"), "circulate");
 			map.put(Book.class.getDeclaredField("finalTomeNumber"), "Final tomes number");
 			map.put(Book.class.getDeclaredField("tomeNumber"), "Tome's number");
 		} catch (NoSuchFieldException e) {
