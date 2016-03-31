@@ -2,3 +2,4 @@ bin/*
 .project
 .settings/
 build.fxbuild
+/bin/
