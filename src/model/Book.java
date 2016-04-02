@@ -10,15 +10,20 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class Book implements NamedFields{
+	public static final String TOME_NUMBER = "tomeNumber";
+	public static final String FINAL_TOME_NUMBER = "finalTomeNumber";
+	public static final String CIRCULATION = "circ";
+	public static final String BOOK_NAME = "bookName";
+	public static final String AUTHOR_NAME = "authorName";
 	static Map<Field, String> fieldName = initMap();
 	static Map<Field, String> initMap(){
 		Map<Field, String> map = new HashMap<>();
 		try {
-			map.put(Book.class.getDeclaredField("authorName"), "Author");
-			map.put(Book.class.getDeclaredField("bookName"), "Book's name");
-			map.put(Book.class.getDeclaredField("circulate"), "circulate");
-			map.put(Book.class.getDeclaredField("finalTomeNumber"), "Final tomes number");
-			map.put(Book.class.getDeclaredField("tomeNumber"), "Tome's number");
+			map.put(Book.class.getDeclaredField(AUTHOR_NAME), "Author");
+			map.put(Book.class.getDeclaredField(BOOK_NAME), "Book's name");
+			map.put(Book.class.getDeclaredField(CIRCULATION), "Circulation");
+			map.put(Book.class.getDeclaredField(FINAL_TOME_NUMBER), "Final tomes number");
+			map.put(Book.class.getDeclaredField(TOME_NUMBER), "Tome's number");
 		} catch (NoSuchFieldException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -30,14 +35,14 @@ public class Book implements NamedFields{
 	}
 	private StringProperty authorName = new SimpleStringProperty();
 	private StringProperty bookName = new SimpleStringProperty();
-	private IntegerProperty circulation = new SimpleIntegerProperty();
+	private IntegerProperty circ = new SimpleIntegerProperty();
 	private IntegerProperty finalTomeNumber = new SimpleIntegerProperty();
 	private IntegerProperty tomeNumber = new SimpleIntegerProperty();
 
 	public Book(String a, String b, int c, int e) {
 		bookName.set(a);
 		authorName.set(b);
-		circulation.set(c);
+		circ.set(c);
 		tomeNumber.set(e);
 		finalTomeNumber.set(c * e);
 	}
@@ -57,10 +62,10 @@ public class Book implements NamedFields{
 	}
 
 	/**
-	 * @return the circulation
+	 * @return the circ
 	 */
 	public int getCirculation() {
-		return circulation.get();
+		return circ.get();
 	}
 
 	/**
@@ -94,11 +99,11 @@ public class Book implements NamedFields{
 	}
 
 	/**
-	 * @param circulation
-	 *            the circulation to set
+	 * @param circ
+	 *            the circ to set
 	 */
 	public void setCirculation(int circulation) {
-		this.circulation.set(circulation);
+		this.circ.set(circulation);
 	}
 
 	/**

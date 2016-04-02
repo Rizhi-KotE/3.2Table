@@ -1,6 +1,7 @@
-package view;
+package controler;
 
 
+import application.Main;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
@@ -25,17 +26,24 @@ public class AddForm {
 	public AddForm(Library lib) {
 		library = lib;
 		pane = new HBox();
-		bookNameField.setPromptText("book's name");
-
-		athorNameField.setPromptText("author's name");
-		tomesNameField.setPromptText("tomes number");
-		circulationNameField.setPromptText("book's circulation");
+		
+		bookNameField.setPromptText("bookName");
+		athorNameField.setPromptText("authorName");
+		tomesNameField.setPromptText("tomeNumber");
+		circulationNameField.setPromptText("circulation");
 		addButton.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent event) {
-				Book book = new Book(bookNameField.getText(),athorNameField.getText(),Integer.parseInt(tomesNameField.getText()),Integer.parseInt(circulationNameField.getText()));
-				library.addBook(book);
+				
+				Book book;
+				try {
+					book = new Book(bookNameField.getText(),athorNameField.getText(),Integer.parseInt(tomesNameField.getText()),Integer.parseInt(circulationNameField.getText()));
+					library.addBook(book);
+				} catch (NumberFormatException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 				pane.getChildren().addAll(bookNameField, athorNameField, tomesNameField,circulationNameField,addButton);
