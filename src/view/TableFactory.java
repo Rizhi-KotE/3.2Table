@@ -1,6 +1,7 @@
 package view;
 
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -13,44 +14,78 @@ public class TableFactory {
 		Main, Find
 	}
 
-	public static Pane getTable(Library lib, Type type) {
+	public static TablePane getTable(Library lib, Type type) {
 		Pane pane = null;
+		MainTable table = null;
 		switch (type) {
 		case Main: {
-			pane = createMainMenu(lib);
+			table = new MainTable(lib);
+			pane = createMainMenu(table);
+			table.setItems(lib.addBookFilter(table, Library.booksType.ALL));
 		}
 			break;
 		case Find: {
-
+			table = new MainTable(lib);
+			pane = createMainMenu(table);
+			table.setItems(lib.addBookFilter(table, Library.booksType.FINDED));
 		}
 			break;
 		}
-		return pane;
+		return new TablePane(table, pane);
 	}
 
-	private static Pane createMainMenu(Library lib) {
+	private static Pane createMainMenu(MainTable main) {
 		Pane pane = new VBox();
-		MainTable main = new MainTable(lib);
 		TableView<Book> table = main.getTable();
 		table.setMaxHeight(280);
 		table.setMaxWidth(500);
 		pane.getChildren().add(table);
 		Button prev = new Button("previos");
-		prev.setOnAction(e->{main.previos();});
+		prev.setOnAction(e -> {
+			main.previos();
+		});
 		Button first = new Button("first");
-		first.setOnAction(e->{main.first();});
+		first.setOnAction(e -> {
+			main.first();
+		});
 		Button next = new Button("next");
-		next.setOnAction(e->{main.next();});
+		next.setOnAction(e -> {
+			main.next();
+		});
 		Button end = new Button("end");
-		end.setOnAction(e->{main.end();});
+		end.setOnAction(e -> {
+			main.end();
+		});
+		Label label = new Label(Integer.toString(main.getLibSize().get()));
+		label.setMinSize(10, 0);
+		main.getLibSize().addListener((e, oldValue, newValue) -> {
+			label.setText(Integer.toString(main.getLibSize().get()));
+		});
+
 		HBox buttons = new HBox();
-		buttons.getChildren().addAll(first, prev, next, end);
+		buttons.getChildren().addAll(first, prev, label, next, end);
 		pane.getChildren().add(buttons);
 		return pane;
 	}
-
-	private static Pane createMainMenu() {
-		Library lib = new Library();
-		return createMainMenu(lib);
+	public static class TablePane{
+		private MainTable table;
+		private Pane pane;
+		/**
+		 * @return the table
+		 */
+		public MainTable getTable() {
+			return table;
+		}
+		/**
+		 * @return the pane
+		 */
+		public Pane getPane() {
+			return pane;
+		}
+		public TablePane(MainTable table, Pane pane) {
+			super();
+			this.table = table;
+			this.pane = pane;
+		}
 	}
 }

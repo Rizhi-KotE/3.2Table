@@ -54,10 +54,10 @@ public class Main extends Application {
 		VBox grid = new VBox();
 
 		grid.getChildren().add(new MainMenu(lib).getMenuBar());
-		grid.getChildren().add(TableFactory.getTable(lib, TableFactory.Type.Main));
+		grid.getChildren().add(TableFactory.getTable(lib, TableFactory.Type.Main).getPane());
 		grid.getChildren().add(new AddForm(lib).getPane());
 
-		Scene scene = new LocalizedStage(grid, 400, 400);
+		Scene scene = new LocalizedScene(grid, 400, 400);
 		scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 
 		primaryStage.setScene(scene);

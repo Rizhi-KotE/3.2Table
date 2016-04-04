@@ -16,14 +16,14 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 
-public class LocalizedStage extends Scene {
+public class LocalizedScene extends Scene {
 
-	public LocalizedStage(Parent root) {
+	public LocalizedScene(Parent root) {
 		super(root);
 		localizeLabeled(root);
 	}
 
-	public LocalizedStage(Parent root, double width, double height) {
+	public LocalizedScene(Parent root, double width, double height) {
 		super(root, width, height);
 		localizeLabeled(root);
 	}
@@ -43,10 +43,10 @@ public class LocalizedStage extends Scene {
 			} catch (SecurityException e) {
 
 			}
-			if (method != null) {
-				localiseNode("Text", node);
-			} else if (node instanceof TextField) {
+			if (node instanceof TextField) {
 				localiseNode("PromptText", node);
+			} else if (method != null) {
+				localiseNode("Text", node);
 			} else if (node instanceof MenuBar) {
 				localiseMenuBar((MenuBar) node);
 			} else if (node instanceof TableView<?>) {

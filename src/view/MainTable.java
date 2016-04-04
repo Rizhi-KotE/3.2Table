@@ -1,30 +1,52 @@
 package view;
 
-import com.sun.javafx.tk.Toolkit;
-
 import javafx.beans.property.IntegerProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
-import javafx.scene.text.Font;
 import model.Book;
 import model.Library;
 
-public class MainTable {
+ public class MainTable {
+	private IntegerProperty currentGroup;
+	private int groupSize = 10;
 	private Library library;
+
+	private IntegerProperty libSize;
 	private Pane pane;
 	private TableView<Book> table;
 
-	public MainTable(Library lib) {
+	MainTable(Library lib) {
 		library = lib;
 		libSize = lib.sizeProperty();
 		table = new TableView<>();
 		table = initTable(table);
-		initNavigationButtons(table);
 		table.setMaxHeight(280);
+		currentGroup = new SimpleIntegerProperty();
+	}
+
+	public void end() {
+		if (libSize.get() > groupSize) {
+			currentGroup.set((int) libSize.get() / groupSize);
+			table.setItems(library.getGroup(this, currentGroup.get(), groupSize));
+		}
+	}
+
+	public void first() {
+		if (currentGroup.get() != 0) {
+			currentGroup.set(0);
+			table.setItems(library.getGroup(this, currentGroup.get(), groupSize));
+		}
+	}
+
+	/**
+	 * @return the libSize
+	 */
+	public IntegerProperty getLibSize() {
+		return libSize;
 	}
 
 	/**
@@ -39,10 +61,6 @@ public class MainTable {
 	 */
 	public TableView<Book> getTable() {
 		return table;
-	}
-
-	private void initNavigationButtons(TableView<Book> table) {
-
 	}
 
 	private TableView<Book> initTable(TableView<Book> table) {
@@ -68,39 +86,24 @@ public class MainTable {
 
 		table.getColumns().addAll(bookNameCol, authorCol, circulationCol, tomesNumCol, finalTomesNumCol);
 		table.getVisibleLeafColumns();
-		table.setItems(library.getBooks());
 		return table;
 	}
 
-	private IntegerProperty libSize;
-	/**
-	 * @return the libSize
-	 */
-	public IntegerProperty getLibSize() {
-		return libSize;
-	}
-
-	private int groupSize = 10;
-	private int currentGroup = 0;
-	
-	public void end() {
-		// TODO Auto-generated method stub
-
-	}
-
 	public void next() {
-		if(libSize.get()>currentGroup*groupSize+groupSize){
-			table.setItems(library.getGroup(++currentGroup, groupSize));
+		if (libSize.get() > currentGroup.get() * groupSize + groupSize) {
+			currentGroup.set(currentGroup.get() + 1);
+			table.setItems(library.getGroup(this,(currentGroup.get()), groupSize));
 		}
 	}
 
-	public void first() {
-		// TODO Auto-generated method stub
-
+	public void previos() {
+		if (currentGroup.get() > 0) {
+			currentGroup.set(currentGroup.get() - 1);
+			table.setItems(library.getGroup(this,currentGroup.get(), groupSize));
+		}
 	}
 
-	public void previos() {
-		// TODO Auto-generated method stub
-
+	public void setItems(ObservableList<Book> find) {
+		table.setItems(find);
 	}
 }

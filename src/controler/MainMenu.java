@@ -47,7 +47,10 @@ public class MainMenu {
 		menuBar.getMenus().add(menu);
 		
 		item = new MenuItem("find");
-		item.setOnAction((e)->{new FindDialog(lib).getDialog().show();});
+		item.setOnAction((e)->{new FindDialog(lib).show(FindDialog.Type.FIND);});
+		menu.getItems().add(item);
+		item = new MenuItem("delete");
+		item.setOnAction((e)->{new FindDialog(lib).show(FindDialog.Type.DELETE);});
 		menu.getItems().add(item);
 		menu = new Menu("help");
 		menuBar.getMenus().add(menu);
