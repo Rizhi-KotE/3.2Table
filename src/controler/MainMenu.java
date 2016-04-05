@@ -5,6 +5,7 @@ import java.util.Locale;
 
 import javax.swing.JOptionPane;
 
+import application.LocalizedScene;
 import application.Main;
 import frm.SaveGraph;
 import javafx.scene.control.Dialog;
@@ -65,11 +66,11 @@ public class MainMenu {
 
 		MenuItem ru = new MenuItem("RU");
 		ru.setOnAction((e) -> {
-			Main.setBundle(new Locale("RU"));
+			LocalizedScene.ChangeLocal("RU");
 		});
 		MenuItem eng = new MenuItem("ENG");
 		eng.setOnAction((e) -> {
-			Main.setBundle(new Locale("ENG"));
+			LocalizedScene.ChangeLocal("ENG");
 		});
 		changeLanguage.getItems().addAll(ru, eng);
 		
