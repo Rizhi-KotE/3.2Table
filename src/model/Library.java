@@ -15,14 +15,14 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import view.MainTable;
+import view.PagedTable;
 
 public class Library {
 	private ObservableList<Book> books;
 	private IntegerProperty size = new SimpleIntegerProperty();
-	private Map<MainTable, ObservableList<Book>> tableListMap = new HashMap<>();
-	private Map<MainTable, ListChangeListener<Book>> listenerMap = new HashMap<>();
-	private Map<MainTable, ObservableList<Book>> booksFilter = new HashMap<>();
+	private Map<PagedTable, ObservableList<Book>> tableListMap = new HashMap<>();
+	private Map<PagedTable, ListChangeListener<Book>> listenerMap = new HashMap<>();
+	private Map<PagedTable, ObservableList<Book>> booksFilter = new HashMap<>();
 	private int groupSize = 10;
 
 	private final class SubListListener implements ListChangeListener<Book> {
@@ -52,7 +52,7 @@ public class Library {
 	/**
 	 * @return the books
 	 */
-	public ObservableList<Book> addBookFilter(MainTable table, booksType type) {
+	public ObservableList<Book> addBookFilter(PagedTable table, booksType type) {
 		switch (type) {
 		case ALL: {
 			if (booksFilter.put(table, books) == null) {
@@ -68,7 +68,7 @@ public class Library {
 		return tableListMap.get(table);
 	}
 
-	private ObservableList<Book> getFirstGroup(MainTable table, ObservableList<Book> list) {
+	private ObservableList<Book> getFirstGroup(PagedTable table, ObservableList<Book> list) {
 		if (list.size() < groupSize) {
 			ListIterator<Book> it = list.listIterator();
 			List<Book> subList = new ArrayList<>(groupSize);
@@ -92,7 +92,7 @@ public class Library {
 			size.set(books.size());
 			while (e.next()) {
 				if (e.wasRemoved())
-					for (MainTable table : tableListMap.keySet())
+					for (PagedTable table : tableListMap.keySet())
 						table.refresh();
 				break;
 			}
@@ -109,7 +109,7 @@ public class Library {
 		return size;
 	}
 
-	public ObservableList<Book> getGroup(MainTable table, int groupNumber, int groupSize) {
+	public ObservableList<Book> getGroup(PagedTable table, int groupNumber, int groupSize) {
 		ObservableList<Book> subList = FXCollections.observableArrayList();
 		ObservableList<Book> books = booksFilter.get(table);
 		ListIterator<Book> it = books.listIterator(groupNumber * groupSize);
@@ -127,7 +127,7 @@ public class Library {
 		return tableListMap.get(table);
 	}
 
-	public ObservableList<Book> find(MainTable table, Predicate<Book> calcResultPredicate) {
+	public ObservableList<Book> find(PagedTable table, Predicate<Book> calcResultPredicate) {
 		booksFilter.put(table, FXCollections.observableArrayList(books.filtered(calcResultPredicate)));
 		tableListMap.put(table, getFirstGroup(table, booksFilter.get(table)));
 		return tableListMap.get(table);
@@ -142,13 +142,13 @@ public class Library {
 		books.addAll(elements);
 	}
 
-	public ObservableList<Book> getAllBooks(MainTable table){
+	public ObservableList<Book> getAllBooks(PagedTable table){
 		if(booksFilter.get(table)==null){
 			booksFilter.put(table, FXCollections.observableList(new ArrayList<>()));
 		}
 		return booksFilter.get(table);
 	}
-	public void remove(MainTable table, Predicate<Book> calcResultPredicate) {
+	public void remove(PagedTable table, Predicate<Book> calcResultPredicate) {
 		books.removeIf(calcResultPredicate);
 		
 	}

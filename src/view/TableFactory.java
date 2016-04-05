@@ -17,16 +17,16 @@ public class TableFactory {
 
 	public static TablePane getTable(Library lib, Type type) {
 		Pane pane = null;
-		MainTable table = null;
+		PagedTable table = null;
 		switch (type) {
 		case Main: {
-			table = new MainTable(lib);
+			table = new PagedTable(lib);
 			pane = createMainMenu(table);
 			table.setItems(lib.addBookFilter(table, Library.booksType.ALL));
 		}
 			break;
 		case Find: {
-			table = new MainTable(lib);
+			table = new PagedTable(lib);
 			pane = createMainMenu(table);
 			table.setItems(lib.addBookFilter(table, Library.booksType.FINDED));
 		}
@@ -35,7 +35,7 @@ public class TableFactory {
 		return new TablePane(table, pane);
 	}
 
-	private static Pane createMainMenu(MainTable main) {
+	private static Pane createMainMenu(PagedTable main) {
 		VBox pane = new VBox();
 		TableView<Book> table = main.getTable();
 		table.setMaxHeight(280);
@@ -74,13 +74,13 @@ public class TableFactory {
 	}
 
 	public static class TablePane {
-		private MainTable table;
+		private PagedTable table;
 		private Pane pane;
 
 		/**
 		 * @return the table
 		 */
-		public MainTable getTable() {
+		public PagedTable getTable() {
 			return table;
 		}
 
@@ -91,7 +91,7 @@ public class TableFactory {
 			return pane;
 		}
 
-		public TablePane(MainTable table, Pane pane) {
+		public TablePane(PagedTable table, Pane pane) {
 			super();
 			this.table = table;
 			this.pane = pane;

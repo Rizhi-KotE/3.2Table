@@ -15,7 +15,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.Book;
 import model.Library;
-import view.MainTable;
+import view.PagedTable;
 import view.TableFactory;
 import view.TableFactory.TablePane;
 
@@ -76,7 +76,7 @@ public class FindDialog {
 
 	private ToggleGroup circulationToogle;
 
-	private MainTable table;
+	private PagedTable table;
 
 	enum Type {
 		FIND, DELETE

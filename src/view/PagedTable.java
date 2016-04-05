@@ -1,7 +1,10 @@
 package view;
 
+import java.util.List;
+
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
@@ -9,24 +12,27 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import model.Book;
-import model.Library;
 
- public class MainTable {
-	private IntegerProperty currentGroup;
-	private int groupSize = 10;
-	private Library library;
-
+ public class PagedTable {
+	private ObservableList<Book> books;
+	
 	private IntegerProperty libSize;
-	private Pane pane;
 	private TableView<Book> table;
 
-	MainTable(Library lib) {
-		library = lib;
+	PagedTable(List<Book> lib) {
+		setBooks(lib);
 		libSize = new SimpleIntegerProperty();
 		table = new TableView<>();
 		table = initTable(table);
 		table.setMaxHeight(280);
 		currentGroup = new SimpleIntegerProperty();
+	}
+
+	private void setBooks(List<Book> lib) {
+		books = FXCollections.observableList(lib);
+		libSize.set(books.size());
+		ListChangeListener<Book> listener = e->{libSize.set(books.size());};
+		
 	}
 
 	public void end() {
@@ -103,14 +109,6 @@ import model.Library;
 			table.setItems(library.getGroup(this,currentGroup.get(), groupSize));
 		}
 	}
-	
-	public void refresh() {
-		if (libSize.get()/groupSize < currentGroup.get()) {
-			end();
-		}else{
-			table.setItems(library.getGroup(this, currentGroup.get(), groupSize));
-		}
-	}
 
 	public void setItems(ObservableList<Book> find) {
 		table.setItems(find);
@@ -118,4 +116,5 @@ import model.Library;
 		ListChangeListener<Book> listener = (e)->{libSize.set(library.getAllBooks(this).size());};
 		library.getAllBooks(this).addListener(listener);
 	}
+	
 }
