@@ -2,6 +2,7 @@ package view;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -21,7 +22,7 @@ import model.Library;
 
 	MainTable(Library lib) {
 		library = lib;
-		libSize = lib.sizeProperty();
+		libSize = new SimpleIntegerProperty();
 		table = new TableView<>();
 		table = initTable(table);
 		table.setMaxHeight(280);
@@ -92,7 +93,7 @@ import model.Library;
 	public void next() {
 		if (libSize.get() > currentGroup.get() * groupSize + groupSize) {
 			currentGroup.set(currentGroup.get() + 1);
-			table.setItems(library.getGroup(this,(currentGroup.get()), groupSize));
+			table.setItems(library.getGroup(this,currentGroup.get(), groupSize));
 		}
 	}
 
@@ -102,8 +103,19 @@ import model.Library;
 			table.setItems(library.getGroup(this,currentGroup.get(), groupSize));
 		}
 	}
+	
+	public void refresh() {
+		if (libSize.get()/groupSize < currentGroup.get()) {
+			end();
+		}else{
+			table.setItems(library.getGroup(this, currentGroup.get(), groupSize));
+		}
+	}
 
 	public void setItems(ObservableList<Book> find) {
 		table.setItems(find);
+		libSize.set(find.size());
+		ListChangeListener<Book> listener = (e)->{libSize.set(library.getAllBooks(this).size());};
+		library.getAllBooks(this).addListener(listener);
 	}
 }

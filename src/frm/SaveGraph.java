@@ -48,7 +48,7 @@ public class SaveGraph {
 		return doc;
 	}
 
-	public void save(String file, Collection<Book> elements) {
+	public static void save(File file, Collection<Book> elements) {
 
 		doc = newDoc();
 		Element root = doc.createElement(ROOT_ELEM_TAG);
@@ -63,6 +63,7 @@ public class SaveGraph {
 			newElement.setAttribute(Book.BOOK_NAME, book.getBookName());
 			newElement.setAttribute(Book.CIRCULATION, Integer.toString(book.getCirculation()));
 			newElement.setAttribute(Book.TOME_NUMBER, Integer.toString(book.getTomeNumber()));
+			books.appendChild(newElement);
 		}
 
 		try {
@@ -73,19 +74,16 @@ public class SaveGraph {
 		}
 	}
 
-	private void toXML(String s, Document document) throws TransformerException, IOException {
-
-		File file = new File(s);
-
+	private static void toXML(File file, Document document) throws TransformerException, IOException {
 		Transformer transformer = TransformerFactory.newInstance().newTransformer();
 		transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 		transformer.transform(new DOMSource(doc), new StreamResult(file));
 	}
 
-	public List<Book> loadLybrary(String s) {
+	public static List<Book> loadLybrary(File fileName) {
 		InputStream in = null;
 		try {
-			in = new FileInputStream(s);
+			in = new FileInputStream(fileName);
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -102,7 +100,7 @@ public class SaveGraph {
 		return clipGraph;
 	}
 
-	private class XMLGraphLoader {
+	private static class XMLGraphLoader {
 		private InputSource source;
 		private SAXParser parser;
 		private DefaultHandler documentHandler;
@@ -143,6 +141,7 @@ public class SaveGraph {
 						attr.getValue(Book.BOOK_NAME),
 						Integer.parseInt(attr.getValue(Book.CIRCULATION)),
 						Integer.parseInt(attr.getValue(Book.TOME_NUMBER)));
+				booksList.add(book);
 			}
 		}
 	}

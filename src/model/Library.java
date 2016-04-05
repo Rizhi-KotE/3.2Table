@@ -1,7 +1,10 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -84,15 +87,22 @@ public class Library {
 
 	public Library() {
 		books = FXCollections.observableArrayList();
-		books.addAll(new Book("asd", "qwe", 1, 2));
-		ListChangeListener<Book> listener
+		//books.addAll(new Book("asd", "qwe", 1, 2));
+		ListChangeListener<Book> listener = (e) -> {
+			size.set(books.size());
+			while (e.next()) {
+				if (e.wasRemoved())
+					for (MainTable table : tableListMap.keySet())
+						table.refresh();
+				break;
+			}
+		};
+		books.addListener(listener);
 		size.set(books.size());
 	}
 
 	public void addBook(Book book) {
 		books.add(book);
-		size.set(size.get() + 1);
-		;
 	}
 
 	public IntegerProperty sizeProperty() {
@@ -109,7 +119,8 @@ public class Library {
 		ListChangeListener<Book> listener = new SubListListener(subList);
 		ObservableList<Book> oldList = tableListMap.get(table);
 		ListChangeListener<Book> oldListener = listenerMap.get(table);
-		books.removeListener(oldListener);
+		if (oldListener != null)
+			books.removeListener(oldListener);
 		books.addListener(listener);
 		tableListMap.put(table, subList);
 		listenerMap.put(table, listener);
@@ -122,7 +133,23 @@ public class Library {
 		return tableListMap.get(table);
 	}
 
+	public Collection<Book> getBooks() {
+		return books;
+	}
+
+	public void openFile(Collection<Book> elements) {
+		books.clear();
+		books.addAll(elements);
+	}
+
+	public ObservableList<Book> getAllBooks(MainTable table){
+		if(booksFilter.get(table)==null){
+			booksFilter.put(table, FXCollections.observableList(new ArrayList<>()));
+		}
+		return booksFilter.get(table);
+	}
 	public void remove(MainTable table, Predicate<Book> calcResultPredicate) {
 		books.removeIf(calcResultPredicate);
+		
 	}
 }

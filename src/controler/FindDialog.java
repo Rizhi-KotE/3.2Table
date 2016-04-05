@@ -96,7 +96,7 @@ public class FindDialog {
 		athorNameField.setPromptText("authorName");
 		tomesNumberField.setPromptText("tomeNumber");
 		circulationField.setPromptText("circulation");
-		finalTomesNumberField.setPromptText("finalTomesNumber");
+		finalTomesNumberField.setPromptText("finalTomeNumber");
 		Button findButton = new Button("find");
 		findButton.setOnAction((e) -> {
 			calcPredicate();
@@ -113,7 +113,7 @@ public class FindDialog {
 		athorNameField.setPromptText("authorName");
 		tomesNumberField.setPromptText("tomeNumber");
 		circulationField.setPromptText("circulation");
-		finalTomesNumberField.setPromptText("finalTomesNumber");
+		finalTomesNumberField.setPromptText("finalTomeNumber");
 		Button findButton = new Button("find");
 		findButton.setOnAction((e) -> {
 			calcPredicate();

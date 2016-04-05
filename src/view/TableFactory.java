@@ -3,6 +3,7 @@ package view;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -35,7 +36,7 @@ public class TableFactory {
 	}
 
 	private static Pane createMainMenu(MainTable main) {
-		Pane pane = new VBox();
+		VBox pane = new VBox();
 		TableView<Book> table = main.getTable();
 		table.setMaxHeight(280);
 		table.setMaxWidth(500);
@@ -63,25 +64,33 @@ public class TableFactory {
 		});
 
 		HBox buttons = new HBox();
-		buttons.getChildren().addAll(first, prev, label, next, end);
+		buttons.setMaxWidth(500);
+		buttons.setCenterShape(true);
+		buttons.getChildren().addAll(first, prev, label, next, end); 
+		/*buttons.setStyle(
+				".outer{border: 1px solid blue;}.inner{  border: 1px solid red;    margin: auto;  }");*/
 		pane.getChildren().add(buttons);
 		return pane;
 	}
-	public static class TablePane{
+
+	public static class TablePane {
 		private MainTable table;
 		private Pane pane;
+
 		/**
 		 * @return the table
 		 */
 		public MainTable getTable() {
 			return table;
 		}
+
 		/**
 		 * @return the pane
 		 */
 		public Pane getPane() {
 			return pane;
 		}
+
 		public TablePane(MainTable table, Pane pane) {
 			super();
 			this.table = table;

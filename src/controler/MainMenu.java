@@ -1,10 +1,12 @@
 package controler;
 
+import java.io.File;
 import java.util.Locale;
 
 import javax.swing.JOptionPane;
 
 import application.Main;
+import frm.SaveGraph;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogEvent;
 import javafx.scene.control.DialogPane;
@@ -33,13 +35,16 @@ public class MainMenu {
 
 		MenuItem item = new MenuItem("open");
 		item.setOnAction((e) -> {
-			// TODO
+			FileChooser chooser = new FileChooser();
+			File fileName = chooser.showOpenDialog(Main.getStage());
+			library.openFile(SaveGraph.loadLybrary(fileName));
 		});
 
 		MenuItem save = new MenuItem("save");
-		item.setOnAction((e) -> {
+		save.setOnAction((e) -> {
 			FileChooser chooser = new FileChooser();
-			chooser.showOpenDialog(Main.getStage());
+			File fileName = chooser.showSaveDialog(Main.getStage());
+			SaveGraph.save(fileName, library.getBooks());
 		});
 		menu.getItems().addAll(item, save);
 		
