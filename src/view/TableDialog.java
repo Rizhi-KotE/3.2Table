@@ -1,4 +1,4 @@
-package controler;
+package view;
 
 import java.util.function.Predicate;
 
@@ -15,34 +15,22 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.Book;
 import model.Library;
-import view.PagedTable;
-import view.TableFactory;
-import view.TableFactory.TablePane;
 
-public class FindDialog {
+public class TableDialog {
 	private Stage stage;
 
 	/**
 	 * @return the stage
 	 */
-	public void show(Type e) {
+	public void showFindDialog() {
 		Pane main = new VBox();
-		switch (e) {
-		case FIND: {
-			TablePane tablePain = TableFactory.getTable(library, TableFactory.Type.Find);
-			table = tablePain.getTable();
-			Pane controls = findElements();
-			main.getChildren().addAll(tablePain.getPane(), controls);
-		}
-			break;
-		case DELETE: {
-			TablePane tablePain = TableFactory.getTable(library, TableFactory.Type.Find);
-			table = tablePain.getTable();
-			Pane controls = removeElements();
-			main.getChildren().addAll(tablePain.getPane(), controls);
-		}
-			break;
-		}
+		
+		stage.setScene(new LocalizedScene(main));
+		stage.show();
+	}
+	
+	public void showDeleteDialog() {
+		Pane main = new VBox();
 		stage.setScene(new LocalizedScene(main));
 		stage.show();
 	}
@@ -82,7 +70,7 @@ public class FindDialog {
 		FIND, DELETE
 	};
 
-	public FindDialog(Library lib) {
+	public TableDialog(Library lib) {
 		stage = new Stage();
 		library = lib;
 		stage.setOnCloseRequest((e) -> {
@@ -100,7 +88,7 @@ public class FindDialog {
 		Button findButton = new Button("find");
 		findButton.setOnAction((e) -> {
 			calcPredicate();
-			table.setItems(library.find(table, calcResultPredicate()));
+			table.setItems(library.getBooks(calcResultPredicate()));
 		});
 		box.getChildren().addAll(bookNameField, athorNameField, circulationCheckBox(), tomesNumberField,
 				finalNumberOfTomesCheckBox(), findButton);
@@ -117,12 +105,12 @@ public class FindDialog {
 		Button findButton = new Button("find");
 		findButton.setOnAction((e) -> {
 			calcPredicate();
-			table.setItems(library.find(table, calcResultPredicate()));
+			table.setItems(library.getBooks(calcResultPredicate()));
 		});
 		Button removeButton = new Button("remove");
 		removeButton.setOnAction((e) -> {
 			calcPredicate();
-			table.setItems(library.find(table, calcResultPredicate()));
+			table.setItems(library.getBooks(calcResultPredicate()));
 			library.remove(table, calcResultPredicate());
 		});
 		box.getChildren().addAll(bookNameField, athorNameField, circulationCheckBox(), tomesNumberField,

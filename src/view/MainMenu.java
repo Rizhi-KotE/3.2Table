@@ -1,4 +1,4 @@
-package controler;
+package view;
 
 import java.io.File;
 import java.util.Locale;
@@ -52,10 +52,10 @@ public class MainMenu {
 		menuBar.getMenus().add(menu);
 		
 		item = new MenuItem("find");
-		item.setOnAction((e)->{new FindDialog(lib).show(FindDialog.Type.FIND);});
+		item.setOnAction((e)->{new TableDialog(lib).showFindDialog();});
 		menu.getItems().add(item);
 		item = new MenuItem("delete");
-		item.setOnAction((e)->{new FindDialog(lib).show(FindDialog.Type.DELETE);});
+		item.setOnAction((e)->{new TableDialog(lib).showDeleteDialog();});
 		menu.getItems().add(item);
 		menu = new Menu("help");
 		menuBar.getMenus().add(menu);
