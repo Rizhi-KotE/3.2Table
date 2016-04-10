@@ -15,14 +15,14 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import model.Book;
 
- public class PagedTable {
+public class PagedTable {
 	private ObservableList<Book> books;
-	
+
 	private IntegerProperty libSize;
 	private TableView<Book> table;
 	private IntegerProperty currentGroup;
 	private int groupSize = 10;
-	
+
 	public PagedTable() {
 		libSize = new SimpleIntegerProperty();
 		table = new TableView<>();
@@ -35,15 +35,20 @@ import model.Book;
 	public void setBooks(List<Book> lib) {
 		books = FXCollections.observableList(lib);
 		libSize.set(books.size());
-		ListChangeListener<Book> listener = e->{libSize.set(books.size());};
-		books.addListener(listener);
-		setCurrentGroup();
+		ListChangeListener<Book> listener = e -> {
+			libSize.set(books.size());
+		};
+		currentGroup.set(0);
+	books.addListener(listener);
+
+	setCurrentGroup();
+
 	}
 
 	private void setCurrentGroup() {
 		List<Book> subList = new ArrayList<Book>(groupSize);
-		Iterator<Book> allBooksIt = books.listIterator(currentGroup.get()*groupSize);
-		while(allBooksIt.hasNext()&&subList.size()<groupSize){
+		Iterator<Book> allBooksIt = books.listIterator(currentGroup.get() * groupSize);
+		while (allBooksIt.hasNext() && subList.size() < groupSize) {
 			subList.add(allBooksIt.next());
 		}
 		setItems(subList);
@@ -51,7 +56,7 @@ import model.Book;
 
 	public void end() {
 		if (libSize.get() > groupSize) {
-			currentGroup.set(libSize.get()/groupSize);
+			currentGroup.set(libSize.get() / groupSize);
 			setCurrentGroup();
 		}
 	}
@@ -109,19 +114,24 @@ import model.Book;
 
 	public void next() {
 		if (libSize.get() > currentGroup.get() * groupSize + groupSize) {
-			currentGroup.set(currentGroup.get()+1);
+			currentGroup.set(currentGroup.get() + 1);
 			setCurrentGroup();
 		}
 	}
 
 	public void previos() {
 		if (currentGroup.get() > 0) {
-			currentGroup.set(currentGroup.get()-1);
+			currentGroup.set(currentGroup.get() - 1);
 			setCurrentGroup();
 		}
 	}
 
 	private void setItems(List<Book> find) {
 		table.setItems(FXCollections.observableList(find));
+	}
+
+	public void addBook(Book book) {
+		books.add(book);
+		setCurrentGroup();
 	}
 }

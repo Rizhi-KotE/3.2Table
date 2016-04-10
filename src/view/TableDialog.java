@@ -2,9 +2,8 @@ package view;
 
 import java.util.function.Predicate;
 
-import com.sun.javafx.tk.Toolkit.PaintAccessor;
-
 import application.LocalizedScene;
+import controler.TableControler;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
@@ -14,7 +13,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.Book;
-import model.Library;
+import util.TableButtons;
 
 public class TableDialog {
 	private Stage stage;
@@ -24,20 +23,24 @@ public class TableDialog {
 	 */
 	public void showFindDialog() {
 		Pane main = new VBox();
-		
+		PagedTable table = new PagedTable();
+		main.getChildren().add(TableButtons.attachedPanel(table));
+		main.getChildren().add(findElements(table));
 		stage.setScene(new LocalizedScene(main));
 		stage.show();
 	}
 	
 	public void showDeleteDialog() {
 		Pane main = new VBox();
+		PagedTable table = new PagedTable();
+		main.getChildren().add(TableButtons.attachedPanel(table));
+		main.getChildren().add(removeElements(table));
 		stage.setScene(new LocalizedScene(main));
 		stage.show();
 	}
 
-	private Library library;
+	private TableControler controler;
 
-	private Pane functionalPane;
 	private TextField bookNameField = new TextField();
 	private TextField athorNameField = new TextField();
 	private TextField tomesNumberField = new TextField();
@@ -64,21 +67,15 @@ public class TableDialog {
 
 	private ToggleGroup circulationToogle;
 
-	private PagedTable table;
-
-	enum Type {
-		FIND, DELETE
-	};
-
-	public TableDialog(Library lib) {
+	public TableDialog(TableControler contr) {
 		stage = new Stage();
-		library = lib;
+		controler = contr;
 		stage.setOnCloseRequest((e) -> {
 			stage.close();
 		});
 	}
 
-	private Pane findElements() {
+	private Pane findElements(PagedTable table) {
 		Pane box = new VBox();
 		bookNameField.setPromptText("bookName");
 		athorNameField.setPromptText("authorName");
@@ -88,14 +85,14 @@ public class TableDialog {
 		Button findButton = new Button("find");
 		findButton.setOnAction((e) -> {
 			calcPredicate();
-			table.setItems(library.getBooks(calcResultPredicate()));
+			table.setBooks(controler.getBooks(calcResultPredicate()));
 		});
 		box.getChildren().addAll(bookNameField, athorNameField, circulationCheckBox(), tomesNumberField,
 				finalNumberOfTomesCheckBox(), findButton);
 		return box;
 	}
 
-	private Pane removeElements() {
+	private Pane removeElements(PagedTable table) {
 		Pane box = new VBox();
 		bookNameField.setPromptText("bookName");
 		athorNameField.setPromptText("authorName");
@@ -105,13 +102,12 @@ public class TableDialog {
 		Button findButton = new Button("find");
 		findButton.setOnAction((e) -> {
 			calcPredicate();
-			table.setItems(library.getBooks(calcResultPredicate()));
+			table.setBooks(controler.getBooks(calcResultPredicate()));
 		});
 		Button removeButton = new Button("remove");
 		removeButton.setOnAction((e) -> {
 			calcPredicate();
-			table.setItems(library.getBooks(calcResultPredicate()));
-			library.remove(table, calcResultPredicate());
+			table.setBooks(controler.removeBooks(calcResultPredicate()));
 		});
 		box.getChildren().addAll(bookNameField, athorNameField, circulationCheckBox(), tomesNumberField,
 				finalNumberOfTomesCheckBox(), findButton, removeButton);

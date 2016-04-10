@@ -1,5 +1,6 @@
 package controler;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,8 +25,18 @@ public class TableControler {
 
 	public boolean addBookToLibrary(Book book) {
 		boolean isAdded = library.addBook(book);
-		fireModelChange();
+		if(isAdded){
+			fireModelAddBook(book);
+		}
 		return isAdded;
+	}
+
+	private void fireModelAddBook(Book book) {
+		for(PagedTable table: observer.keySet()){
+			if(observer.get(table).test(book)){
+				table.addBook(book);
+			}
+		}
 	}
 
 	private void fireModelChange() {
@@ -53,7 +64,7 @@ public class TableControler {
 	}
 
 	public List<Book> removeBooks(Predicate<Book> predicate) {
-		List<Book> out = library.remove(predicate);
+		List<Book> out = new ArrayList<>(library.remove(predicate));
 		fireModelChange();
 		return out;
 	}

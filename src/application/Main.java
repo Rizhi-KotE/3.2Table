@@ -11,6 +11,7 @@ import javafx.stage.Stage;
 import model.Library;
 import util.TableButtons;
 import view.AddForm;
+import view.MainMenu;
 import view.PagedTable;
 
 public class Main extends Application {
@@ -55,9 +56,10 @@ public class Main extends Application {
 		TableControler mainControler = new TableControler(lib);
 		PagedTable mainTable = new PagedTable();
 		AddForm add = new AddForm(mainControler);
+		MainMenu menu = new MainMenu(mainControler);
 		
 		mainControler.registerObserverTable(mainTable);
-		grid.getChildren().addAll(TableButtons.attachedPanel(mainTable), add.getPane());
+		grid.getChildren().addAll(menu.getMenuBar(), TableButtons.attachedPanel(mainTable), add.getPane());
 		
 		Scene scene = new LocalizedScene(grid, 400, 400);
 		scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());

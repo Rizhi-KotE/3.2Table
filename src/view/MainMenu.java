@@ -6,6 +6,7 @@ import java.util.Locale;
 import javax.swing.JOptionPane;
 
 import application.Main;
+import controler.TableControler;
 import frm.SaveGraph;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogEvent;
@@ -21,13 +22,15 @@ import model.Library;
 public class MainMenu {
 	private MenuBar menuBar;
 	private Library library;
+	
+	private TableControler controler;
 
 	public MenuBar getMenuBar() {
 		return menuBar;
 	}
 
-	public MainMenu(Library lib) {
-		library = lib;
+	public MainMenu(TableControler contr) {
+		controler = contr;
 		menuBar = new MenuBar();
 
 		Menu menu = new Menu("file");
@@ -52,10 +55,10 @@ public class MainMenu {
 		menuBar.getMenus().add(menu);
 		
 		item = new MenuItem("find");
-		item.setOnAction((e)->{new TableDialog(lib).showFindDialog();});
+		item.setOnAction((e)->{new TableDialog(controler).showFindDialog();});
 		menu.getItems().add(item);
 		item = new MenuItem("delete");
-		item.setOnAction((e)->{new TableDialog(lib).showDeleteDialog();});
+		item.setOnAction((e)->{new TableDialog(controler).showDeleteDialog();});
 		menu.getItems().add(item);
 		menu = new Menu("help");
 		menuBar.getMenus().add(menu);

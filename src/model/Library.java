@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
@@ -37,7 +38,7 @@ public class Library {
 	}
 
 	public List<Book> getBooks(Predicate<Book> predicate) {
-		return books.filtered(predicate);
+		return new ArrayList<>(books.filtered(predicate));
 	}
 	
 	public void openFile(Collection<Book> elements) {
@@ -46,7 +47,7 @@ public class Library {
 	}
 
 	public List<Book> remove(Predicate<Book> predicate) {
-		List<Book> out = books.filtered(predicate);
+		List<Book> out = new ArrayList<>(books.filtered(predicate));
 		books.removeIf(predicate);
 		return out;
 	}
