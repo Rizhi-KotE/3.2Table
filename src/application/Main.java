@@ -1,18 +1,18 @@
 package application;
 
-import java.io.File;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import controler.AddForm;
-import controler.MainMenu;
+import controler.TableControler;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.Library;
-import view.MainTable;
-import view.TableFactory;
+import util.TableButtons;
+import view.AddForm;
+import view.MainMenu;
+import view.PagedTable;
 
 public class Main extends Application {
 	private static ResourceBundle bundle;
@@ -52,11 +52,15 @@ public class Main extends Application {
 		Library lib = new Library();
 
 		VBox grid = new VBox();
-
-		grid.getChildren().add(new MainMenu(lib).getMenuBar());
-		grid.getChildren().add(TableFactory.getTable(lib, TableFactory.Type.Main).getPane());
-		grid.getChildren().add(new AddForm(lib).getPane());
-
+		
+		TableControler mainControler = new TableControler(lib);
+		PagedTable mainTable = new PagedTable();
+		AddForm add = new AddForm(mainControler);
+		MainMenu menu = new MainMenu(mainControler);
+		
+		mainControler.registerObserverTable(mainTable);
+		grid.getChildren().addAll(menu.getMenuBar(), TableButtons.attachedPanel(mainTable), add.getPane());
+		
 		Scene scene = new LocalizedScene(grid, 400, 400);
 		scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 

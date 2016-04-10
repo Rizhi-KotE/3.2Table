@@ -1,7 +1,12 @@
 package view;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
@@ -9,37 +14,57 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import model.Book;
-import model.Library;
 
- public class MainTable {
-	private IntegerProperty currentGroup;
-	private int groupSize = 10;
-	private Library library;
+public class PagedTable {
+	private ObservableList<Book> books;
 
 	private IntegerProperty libSize;
-	private Pane pane;
 	private TableView<Book> table;
+	private IntegerProperty currentGroup;
+	private int groupSize = 10;
 
-	MainTable(Library lib) {
-		library = lib;
+	public PagedTable() {
 		libSize = new SimpleIntegerProperty();
 		table = new TableView<>();
 		table = initTable(table);
+		currentGroup = new SimpleIntegerProperty(0);
+		setBooks(new ArrayList<>());
 		table.setMaxHeight(280);
-		currentGroup = new SimpleIntegerProperty();
+	}
+
+	public void setBooks(List<Book> lib) {
+		books = FXCollections.observableList(lib);
+		libSize.set(books.size());
+		ListChangeListener<Book> listener = e -> {
+			libSize.set(books.size());
+		};
+		currentGroup.set(0);
+	books.addListener(listener);
+
+	setCurrentGroup();
+
+	}
+
+	private void setCurrentGroup() {
+		List<Book> subList = new ArrayList<Book>(groupSize);
+		Iterator<Book> allBooksIt = books.listIterator(currentGroup.get() * groupSize);
+		while (allBooksIt.hasNext() && subList.size() < groupSize) {
+			subList.add(allBooksIt.next());
+		}
+		setItems(subList);
 	}
 
 	public void end() {
 		if (libSize.get() > groupSize) {
-			currentGroup.set((int) libSize.get() / groupSize);
-			table.setItems(library.getGroup(this, currentGroup.get(), groupSize));
+			currentGroup.set(libSize.get() / groupSize);
+			setCurrentGroup();
 		}
 	}
 
 	public void first() {
 		if (currentGroup.get() != 0) {
 			currentGroup.set(0);
-			table.setItems(library.getGroup(this, currentGroup.get(), groupSize));
+			setCurrentGroup();
 		}
 	}
 
@@ -53,9 +78,6 @@ import model.Library;
 	/**
 	 * @return the pane
 	 */
-	public Pane getPane() {
-		return pane;
-	}
 
 	/**
 	 * @return the table
@@ -93,29 +115,23 @@ import model.Library;
 	public void next() {
 		if (libSize.get() > currentGroup.get() * groupSize + groupSize) {
 			currentGroup.set(currentGroup.get() + 1);
-			table.setItems(library.getGroup(this,currentGroup.get(), groupSize));
+			setCurrentGroup();
 		}
 	}
 
 	public void previos() {
 		if (currentGroup.get() > 0) {
 			currentGroup.set(currentGroup.get() - 1);
-			table.setItems(library.getGroup(this,currentGroup.get(), groupSize));
-		}
-	}
-	
-	public void refresh() {
-		if (libSize.get()/groupSize < currentGroup.get()) {
-			end();
-		}else{
-			table.setItems(library.getGroup(this, currentGroup.get(), groupSize));
+			setCurrentGroup();
 		}
 	}
 
-	public void setItems(ObservableList<Book> find) {
-		table.setItems(find);
-		libSize.set(find.size());
-		ListChangeListener<Book> listener = (e)->{libSize.set(library.getAllBooks(this).size());};
-		library.getAllBooks(this).addListener(listener);
+	private void setItems(List<Book> find) {
+		table.setItems(FXCollections.observableList(find));
+	}
+
+	public void addBook(Book book) {
+		books.add(book);
+		setCurrentGroup();
 	}
 }

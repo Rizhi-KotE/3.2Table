@@ -1,12 +1,12 @@
-package controler;
+package view;
 
 import java.io.File;
 import java.util.Locale;
 
 import javax.swing.JOptionPane;
 
-import application.LocalizedScene;
 import application.Main;
+import controler.TableControler;
 import frm.SaveGraph;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogEvent;
@@ -22,13 +22,15 @@ import model.Library;
 public class MainMenu {
 	private MenuBar menuBar;
 	private Library library;
+	
+	private TableControler controler;
 
 	public MenuBar getMenuBar() {
 		return menuBar;
 	}
 
-	public MainMenu(Library lib) {
-		library = lib;
+	public MainMenu(TableControler contr) {
+		controler = contr;
 		menuBar = new MenuBar();
 
 		Menu menu = new Menu("file");
@@ -53,10 +55,10 @@ public class MainMenu {
 		menuBar.getMenus().add(menu);
 		
 		item = new MenuItem("find");
-		item.setOnAction((e)->{new FindDialog(lib).show(FindDialog.Type.FIND);});
+		item.setOnAction((e)->{new TableDialog(controler).showFindDialog();});
 		menu.getItems().add(item);
 		item = new MenuItem("delete");
-		item.setOnAction((e)->{new FindDialog(lib).show(FindDialog.Type.DELETE);});
+		item.setOnAction((e)->{new TableDialog(controler).showDeleteDialog();});
 		menu.getItems().add(item);
 		menu = new Menu("help");
 		menuBar.getMenus().add(menu);
@@ -66,11 +68,11 @@ public class MainMenu {
 
 		MenuItem ru = new MenuItem("RU");
 		ru.setOnAction((e) -> {
-			LocalizedScene.ChangeLocal("RU");
+			Main.setBundle(new Locale("RU"));
 		});
 		MenuItem eng = new MenuItem("ENG");
 		eng.setOnAction((e) -> {
-			LocalizedScene.ChangeLocal("ENG");
+			Main.setBundle(new Locale("ENG"));
 		});
 		changeLanguage.getItems().addAll(ru, eng);
 		
