@@ -1,7 +1,7 @@
-package view;
+package client.view;
 
 
-import controler.TableControler;
+import client.controler.TableControler;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;

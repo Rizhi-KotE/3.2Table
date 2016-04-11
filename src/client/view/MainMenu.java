@@ -1,12 +1,12 @@
-package view;
+package client.view;
 
 import java.io.File;
 import java.util.Locale;
 
 import javax.swing.JOptionPane;
 
-import application.Main;
-import controler.TableControler;
+import client.application.Main;
+import client.controler.TableControler;
 import frm.SaveGraph;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogEvent;
@@ -21,7 +21,6 @@ import model.Library;
 
 public class MainMenu {
 	private MenuBar menuBar;
-	private Library library;
 	
 	private TableControler controler;
 
@@ -40,14 +39,14 @@ public class MainMenu {
 		item.setOnAction((e) -> {
 			FileChooser chooser = new FileChooser();
 			File fileName = chooser.showOpenDialog(Main.getStage());
-			library.openFile(SaveGraph.loadLybrary(fileName));
+			controler.openFile(SaveGraph.loadLybrary(fileName));
 		});
 
 		MenuItem save = new MenuItem("save");
 		save.setOnAction((e) -> {
 			FileChooser chooser = new FileChooser();
 			File fileName = chooser.showSaveDialog(Main.getStage());
-			SaveGraph.save(fileName, library.getBooks());
+			SaveGraph.save(fileName, controler.getBooks());
 		});
 		menu.getItems().addAll(item, save);
 		

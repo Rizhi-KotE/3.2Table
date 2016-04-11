@@ -1,14 +1,15 @@
-package controler;
+package client.controler;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
+import client.view.PagedTable;
 import model.Book;
 import model.Library;
-import view.PagedTable;
 
 public class TableControler {
 	private Library library;
@@ -44,7 +45,12 @@ public class TableControler {
 			table.setBooks(library.getBooks(observer.get(table)));
 		}
 	}
-
+	
+	public void openFile(List<Book> list){
+		library.openFile(list);
+		fireModelChange();
+	}
+	
 	public List<Book> getBooks() {
 		return library.getBooks();
 	}

@@ -1,19 +1,14 @@
-package application;
+package client.application;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Labeled;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -23,28 +18,19 @@ import javafx.scene.control.TextField;
 
 public class LocalizedScene extends Scene {
 
-	private static Set<Parent>  scenes = new HashSet<>();
-	private static Map<Object, String[]> text = new HashMap<>(); 
 	public LocalizedScene(Parent root) {
 		super(root);
 		localizeLabeled(root);
-		scenes.add(root);
 	}
 
 	public LocalizedScene(Parent root, double width, double height) {
 		super(root, width, height);
 		localizeLabeled(root);
-		scenes.add(root);
-	}
-	
-	public static void ChangeLocal(String s){
-		Main.setBundle(new Locale(s));
-		for(Object p: text.keySet()){
-			localiseNode("", p);
-		}
 	}
 
-	private static void localizeLabeled(Parent root) {
+	Map<Class<?>, Labeled> labeled;
+
+	private void localizeLabeled(Parent root) {
 		Iterator<Node> it = root.getChildrenUnmodifiable().iterator();
 		while (it.hasNext()) {
 			Node node = it.next();
@@ -73,7 +59,7 @@ public class LocalizedScene extends Scene {
 		}
 	}
 
-	private static void localiseMenuBar(MenuBar node) {
+	private void localiseMenuBar(MenuBar node) {
 		for (Menu menu : node.getMenus()) {
 			localiseNode("Text", menu);
 			for (MenuItem item : menu.getItems()) {
@@ -82,7 +68,7 @@ public class LocalizedScene extends Scene {
 		}
 	}
 
-	private static void localiseTable(TableView node) {
+	private void localiseTable(TableView node) {
 		Iterator<TableColumn<?, ?>> it = node.getColumns().iterator();
 		while (it.hasNext()) {
 			TableColumn<?, ?> column = it.next();
@@ -90,12 +76,9 @@ public class LocalizedScene extends Scene {
 		}
 	}
 
-	private static void localiseNode(String name, Object node) {
+	private void localiseNode(String name, Object node) {
 		Method set = null;
 		Method get = null;
-		if(text.get(node)!=null&&text.get(node)[1]!=null){
-			name = text.get(node)[1];
-		}
 		try {
 			set = node.getClass().getMethod("set" + name, String.class);
 			get = node.getClass().getMethod("get" + name, new Class[0]);
@@ -104,8 +87,7 @@ public class LocalizedScene extends Scene {
 		} catch (SecurityException e) {
 			e.printStackTrace();
 		}
-		String currentText = text.get(node)[0];
-		if(currentText==null)
+		String currentText = null;
 		try {
 			currentText = (String) get.invoke(node, new Object[0]);
 		} catch (IllegalAccessException e) {
@@ -132,7 +114,7 @@ public class LocalizedScene extends Scene {
 			} catch (InvocationTargetException e) {
 				e.printStackTrace();
 			}
-			text.put(node, (String[])Arrays.asList(currentText, name).toArray());
 		}
+
 	}
 }

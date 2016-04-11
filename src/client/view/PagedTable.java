@@ -1,4 +1,4 @@
-package view;
+package client.view;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -12,7 +12,6 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.Pane;
 import model.Book;
 
 public class PagedTable {
@@ -21,15 +20,28 @@ public class PagedTable {
 	private IntegerProperty libSize;
 	private TableView<Book> table;
 	private IntegerProperty currentGroup;
-	private int groupSize = 10;
+	private IntegerProperty groupSize;
 
 	public PagedTable() {
 		libSize = new SimpleIntegerProperty();
+		groupSize = new SimpleIntegerProperty();
+		currentGroup = new SimpleIntegerProperty(0);
 		table = new TableView<>();
 		table = initTable(table);
-		currentGroup = new SimpleIntegerProperty(0);
-		setBooks(new ArrayList<>());
-		table.setMaxHeight(280);
+		List<Book> list = new ArrayList<>(10);
+		setBooks(list);
+		setGroupSize(10);
+	}
+
+	public void setGroupSize(int size) {
+		groupSize.set(size);
+		table.minHeight(25+size*25);
+		table.setMaxHeight(25+size*25);
+		table.prefHeight(25+size*25);
+		if(currentGroup.get()*size>libSize.get()){
+			currentGroup.set(libSize.get()/groupSize.get());
+		}
+		setCurrentGroup();
 	}
 
 	public void setBooks(List<Book> lib) {
@@ -46,17 +58,17 @@ public class PagedTable {
 	}
 
 	private void setCurrentGroup() {
-		List<Book> subList = new ArrayList<Book>(groupSize);
-		Iterator<Book> allBooksIt = books.listIterator(currentGroup.get() * groupSize);
-		while (allBooksIt.hasNext() && subList.size() < groupSize) {
+		List<Book> subList = new ArrayList<Book>(groupSize.get());
+		Iterator<Book> allBooksIt = books.listIterator(currentGroup.get() * groupSize.get());
+		while (allBooksIt.hasNext() && subList.size() < groupSize.get()) {
 			subList.add(allBooksIt.next());
 		}
 		setItems(subList);
 	}
 
 	public void end() {
-		if (libSize.get() > groupSize) {
-			currentGroup.set(libSize.get() / groupSize);
+		if (libSize.get() > groupSize.get()) {
+			currentGroup.set(libSize.get() / groupSize.get());
 			setCurrentGroup();
 		}
 	}
@@ -75,9 +87,24 @@ public class PagedTable {
 		return libSize;
 	}
 
+	
 	/**
 	 * @return the pane
 	 */
+
+	/**
+	 * @return the currentGroup
+	 */
+	public IntegerProperty getCurrentGroup() {
+		return currentGroup;
+	}
+
+	/**
+	 * @return the groupSize
+	 */
+	public IntegerProperty getGroupSize() {
+		return groupSize;
+	}
 
 	/**
 	 * @return the table
@@ -87,10 +114,10 @@ public class PagedTable {
 	}
 
 	private TableView<Book> initTable(TableView<Book> table) {
-		TableColumn<Book, String> bookNameCol = new TableColumn<>("bookName");
+		TableColumn<Book, String> bookNameCol = new TableColumn<Book, String>("bookName");
 		bookNameCol.setMinWidth(100);
 		bookNameCol.setCellValueFactory(new PropertyValueFactory<Book, String>("bookName"));
-
+		
 		TableColumn<Book, String> authorCol = new TableColumn<Book, String>("authorName");
 		authorCol.setMinWidth(100);
 		authorCol.setCellValueFactory(new PropertyValueFactory<Book, String>("authorName"));
@@ -108,12 +135,11 @@ public class PagedTable {
 		finalTomesNumCol.setCellValueFactory(new PropertyValueFactory<Book, String>("finalTomeNumber"));
 
 		table.getColumns().addAll(bookNameCol, authorCol, circulationCol, tomesNumCol, finalTomesNumCol);
-		table.getVisibleLeafColumns();
 		return table;
 	}
 
 	public void next() {
-		if (libSize.get() > currentGroup.get() * groupSize + groupSize) {
+		if (libSize.get() > currentGroup.get() * groupSize.get() + groupSize.get()) {
 			currentGroup.set(currentGroup.get() + 1);
 			setCurrentGroup();
 		}

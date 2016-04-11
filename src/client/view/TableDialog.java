@@ -1,9 +1,10 @@
-package view;
+package client.view;
 
 import java.util.function.Predicate;
 
-import application.LocalizedScene;
-import controler.TableControler;
+import client.application.LocalizedScene;
+import client.application.Main;
+import client.controler.TableControler;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
@@ -13,7 +14,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.Book;
-import util.TableButtons;
 
 public class TableDialog {
 	private Stage stage;
@@ -24,7 +24,7 @@ public class TableDialog {
 	public void showFindDialog() {
 		Pane main = new VBox();
 		PagedTable table = new PagedTable();
-		main.getChildren().add(TableButtons.attachedPanel(table));
+		main.getChildren().add(Main.attachedPanel(table));
 		main.getChildren().add(findElements(table));
 		stage.setScene(new LocalizedScene(main));
 		stage.show();
@@ -33,7 +33,7 @@ public class TableDialog {
 	public void showDeleteDialog() {
 		Pane main = new VBox();
 		PagedTable table = new PagedTable();
-		main.getChildren().add(TableButtons.attachedPanel(table));
+		main.getChildren().add(Main.attachedPanel(table));
 		main.getChildren().add(removeElements(table));
 		stage.setScene(new LocalizedScene(main));
 		stage.show();
